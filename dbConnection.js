@@ -29,7 +29,7 @@ var con = mysql.createConnection({
 //   });
 // });
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
   var sql = "ALTER TABLE user ADD phone varchar(255)";

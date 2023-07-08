@@ -85,7 +85,7 @@ app.post("/register", (req, res, next) => {
 
 //JWT Login
 app.post("/login", (req, res, next) => {
-  console.log(req)
+  // console.log(req)
   dbConn.query(
     `SELECT * FROM user WHERE email = ${dbConn.escape(req.body.email)};`,
     (err, result) => {
@@ -131,8 +131,8 @@ app.post("/login", (req, res, next) => {
 
 //delete room
 app.delete("/user", (req, res, next) => {
-  
-  
+
+
   const user_id = req.params.id
 
   if (
@@ -147,7 +147,7 @@ app.delete("/user", (req, res, next) => {
   const theToken = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(theToken, "the-super-strong-secrect");
   console.log(decoded)
-  if(theToken){
+  if (theToken) {
     console.log(theToken)
     dbConn.query(
       "DELETE FROM room WHERE id = ?",
@@ -166,6 +166,7 @@ app.delete("/user", (req, res, next) => {
 
 //get user information
 app.get("/user", (req, res, next) => {
+  // console.log(req)
   dbConn.query(
     "SELECT * FROM user",
     function (error, results, fields) {
@@ -179,16 +180,16 @@ app.get("/user", (req, res, next) => {
 app.get("/user/:id", (req, res, next) => {
   const user_id = req.params.id
 
-    dbConn.query(
-      "SELECT * FROM user WHERE id=?",
-      user_id,
-      function (error, results, fields) {
-        // console.log(decoded.name)
-        if (error) throw error;
-        return res.send({ data: results, message: "Users Fetch Successfully." });
-      }
-    );
-  });
+  dbConn.query(
+    "SELECT * FROM user WHERE id=?",
+    user_id,
+    function (error, results, fields) {
+      // console.log(decoded.name)
+      if (error) throw error;
+      return res.send({ data: results, message: "Users Fetch Successfully." });
+    }
+  );
+});
 
 
 //Update Room
@@ -196,61 +197,62 @@ app.put("/update", (req, res, next) => {
   // console.log(res)
 
   const user_id = req.params.id
-  
-    dbConn.query(
-      `SELECT * FROM room WHERE id = ${dbConn.escape(req.body.id)}`,
-      function (error, results, fields) {
-        if(results[0].id){
-          dbConn.query(
+
+  dbConn.query(
+    `SELECT * FROM room WHERE id = ${dbConn.escape(req.body.id)}`,
+    function (error, results, fields) {
+      if (results[0].id) {
+        dbConn.query(
           `UPDATE room SET Description = ${dbConn.escape(req.body.description)} WHERE id = '${results[0].id}'`,
           function (error, results, fields) {
 
           }
-        )}
-        // console.log(decoded.name)
-        if (error) throw error;
-        return res.send({ data: results, message: "Users updated Successfully." });
+        )
       }
-    );
-  }
-// }
+      // console.log(decoded.name)
+      if (error) throw error;
+      return res.send({ data: results, message: "Users updated Successfully." });
+    }
+  );
+}
+  // }
 );
 
-    //Multer Storage 
-  const storage = multer.diskStorage({
-      destination: function(req, file, cb) {
-          cb(null, './uploads');
-      },
-     
-      filename: function(req, file, cb) {
-        // console.log(req.headers)
-          cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-      }
-  });
-     
-  var upload = multer({ storage: storage })
-     
-  app.get('/file', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-  });
-  
-  app.post('/profile-upload-single', upload.any('profile-file'), function (req, res, next) {
-    console.log(req)
-    // req.body will hold the text fields, if there were any
-    console.log(JSON.stringify(req.files))
-    var response = '<a href="/">Home</a><br>'
-    response += "Files uploaded successfully.<br>"
-    response += `<img src="${req.files[0].path}" /><br>`
-    var imgsrc = req.files[0].path
-    var insertData = "INSERT INTO users1(images1)VALUES(?)"
-    dbConn.query(insertData, [imgsrc],  (err, result) => {
-        if (err) throw err;
-        console.log("file uploaded")
-        res.send({ message: "image added Successfully into database." });
-    })
-    return res.send(response)
+//Multer Storage 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+
+  filename: function (req, file, cb) {
+    // console.log(req.headers)
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+var upload = multer({ storage: storage })
+
+app.get('/file', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+app.post('/profile-upload-single', upload.any('profile-file'), function (req, res, next) {
+  console.log(req)
+  // req.body will hold the text fields, if there were any
+  console.log(JSON.stringify(req.files))
+  var response = '<a href="/">Home</a><br>'
+  response += "Files uploaded successfully.<br>"
+  response += `<img src="${req.files[0].path}" /><br>`
+  var imgsrc = req.files[0].path
+  var insertData = "INSERT INTO users1(images1)VALUES(?)"
+  dbConn.query(insertData, [imgsrc], (err, result) => {
+    if (err) throw err;
+    console.log("file uploaded")
+    res.send({ message: "image added Successfully into database." });
   })
-     
+  return res.send(response)
+})
+
 
 // set port in
 app.listen(3000, function () {
