@@ -85,7 +85,7 @@ app.post("/register", (req, res, next) => {
 
 //JWT Login
 app.post("/login", (req, res, next) => {
-  // console.log(req)
+  console.log(req)
   dbConn.query(
     `SELECT * FROM user WHERE email = ${dbConn.escape(req.body.email)};`,
     (err, result) => {
