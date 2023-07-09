@@ -28,10 +28,10 @@ app.get("/", function (req, res) {
 
 // connection configurations
 var dbConn = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "user",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DBNAME,
 });
 // connect to database
 dbConn.connect();
@@ -255,7 +255,7 @@ app.post('/profile-upload-single', upload.any('profile-file'), function (req, re
 
 
 // set port in
-app.listen(3000, function () {
+app.listen(process.env.PORT, function () {
   console.log("Node app is running on port 3000");
 });
 module.exports = app;
