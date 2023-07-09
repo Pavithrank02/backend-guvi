@@ -255,7 +255,7 @@ app.post('/profile-upload-single', upload.any('profile-file'), function (req, re
 
 
 // set port in
-app.listen(process.env.PORT, function () {
+app.listen(3000, function () {
   console.log("Node app is running on port 3000");
 });
 module.exports = app;
