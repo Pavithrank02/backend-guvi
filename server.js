@@ -33,7 +33,7 @@ var dbConn = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DBNAME,
 });
-// connect to database
+
 dbConn.connect();
 
 //Register User
